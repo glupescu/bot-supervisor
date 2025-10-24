@@ -7,7 +7,8 @@ import (
 )
 
 type Agent interface {
-	Init(name string, bot *tgbotapi.BotAPI) error
+	Init(name string, bot *tgbotapi.BotAPI,
+		users map[int64]interface{}) error
 
 	Serve(string, user.Type, int64) (string, error)
 

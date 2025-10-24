@@ -22,14 +22,17 @@ type ExecData struct {
 type SysAgent struct {
 	name         string
 	bot          *tgbotapi.BotAPI
+	users        map[int64]interface{}
 	execFuncDict map[string]ExecData
 	execWords    []string
 	sTime        time.Time
 }
 
-func (sa *SysAgent) Init(name string, bot *tgbotapi.BotAPI) error {
+func (sa *SysAgent) Init(name string, bot *tgbotapi.BotAPI,
+	users map[int64]interface{}) error {
 	sa.name = name
 	sa.bot = bot
+	sa.users = users
 	sa.sTime = time.Now()
 	sa.execFuncDict = map[string]ExecData{
 		"temp": {
@@ -80,6 +83,8 @@ func (sa *SysAgent) Init(name string, bot *tgbotapi.BotAPI) error {
 			return helpStr, nil
 		},
 	}
+	// start signal goroutine for nvidia gpu check
+	go sa.CheckNvidiaGpus()
 	return nil
 }
 

@@ -11,7 +11,8 @@ func main() {
 	sysAgent := &agent.SysAgent{}
 	sysAgentName := "Supervisor"
 	if err = sysAgent.Init(sysAgentName,
-		agent.NewBot("1234567890:AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQR")); err != nil {
+		agent.NewBot("1234567890:AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQR"),
+		map[int64]interface{}{}); err != nil {
 		return
 	}
 
