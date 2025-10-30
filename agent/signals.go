@@ -2,6 +2,7 @@ package agent
 
 import (
 	"fmt"
+	"os"
 	"regexp"
 	"strconv"
 	"time"
@@ -10,7 +11,9 @@ import (
 )
 
 func (sa *SysAgent) MsgUsers(msgStr string) error {
+	fmt.Printf("Message %v users\n", len(sa.users))
 	for userID, _ := range sa.users {
+		fmt.Printf("Message user %v\n", userID)
 		msgTel := tgbotapi.NewMessage(userID, msgStr)
 		if _, err := sa.bot.Send(msgTel); err != nil {
 			return fmt.Errorf("Failed to send message %v: error %v\n", err)
@@ -49,6 +52,17 @@ func (sa *SysAgent) CheckNvidiaGpus() {
 		MemMax  int
 		TempMin int
 		TempMax int
+	}
+
+	hostname, err := os.Hostname()
+	if err != nil {
+		fmt.Println("Error fetching hostname:", err)
+	}
+	// initial message when bot starts
+	if err := sa.MsgUsers(
+		fmt.Sprintf("\U000026A0 Bot started for %v at %v",
+			hostname, time.Now().Format("2006-01-02 15:04:05"))); err != nil {
+		fmt.Printf("Error send message %v", err)
 	}
 
 	for {
